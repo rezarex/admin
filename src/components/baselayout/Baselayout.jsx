@@ -6,7 +6,7 @@ import {
     // VideoCameraOutlined,
   } from '@ant-design/icons';
  import { Button, Layout, Menu, theme } from 'antd';
- import { useNavigate, Outlet } from 'react-router-dom';
+ import { useNavigate, Outlet, Link } from 'react-router-dom';
  import { useState } from 'react';
  import {AiOutlineDashboard} from 'react-icons/ai'
  import {IoIosNotificationsOutline} from 'react-icons/io'
@@ -140,13 +140,17 @@ const Baselayout = () => {
               <IoIosNotificationsOutline className='text-white'/>
               <span className='badge bg-warning rounded-circle p-1 position-absolute'>3</span>
             </div>
-            <div className='d-flex gap-3 align-items-center'>
+            <div className='d-flex gap-3 align-items-center dropdown'>
               <div>
                 <img className='img' src="https://wallpapers.com/images/hd/cool-profile-picture-n8lf8k6jzs6ex36l.jpg" alt="" />
               </div>
-              <div>
+              <div role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                 <h5 className='text-white mb-0'>Marvin</h5>
                 <p className='text-white mb-0'>marvin.wekesa@gmail.com</p>
+              </div>
+              <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                  <li><Link className="dropdown-item py-2 mb-0" style={{"height": "auto", "lineHeight" : "20px"}} to="/">Profile</Link></li>
+                  <li><Link className="dropdown-item py-2 mb-0" style={{"height": "auto", "lineHeight" : "20px"}} to="/">Logout</Link></li>
               </div>
             </div>
           </div>
