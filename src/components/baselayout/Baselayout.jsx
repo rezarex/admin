@@ -1,15 +1,17 @@
 import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
-    UploadOutlined,
-    UserOutlined,
-    VideoCameraOutlined,
+    // UploadOutlined,
+    // UserOutlined,
+    // VideoCameraOutlined,
   } from '@ant-design/icons';
  import { Button, Layout, Menu, theme } from 'antd';
- import { useNavigate } from 'react-router-dom';
+ import { useNavigate, Outlet } from 'react-router-dom';
  import { useState } from 'react';
  import {AiOutlineDashboard} from 'react-icons/ai'
- import {GiEvilBook, GiCampfire} from 'react-icons/gi'
+ import {IoIosNotificationsOutline} from 'react-icons/io'
+ import {RiUserSettingsFill, RiCommunityLine} from 'react-icons/ri'
+ import {GiEvilBook,GiBookmark,GiSpellBook,GiBookPile,GiBookshelf,GiFireDash,GiWildfires, GiCampfire} from 'react-icons/gi'
  import {BsPeople, BsChatLeftDots} from 'react-icons/bs'
  import './baselayout.css'
  const { Header, Sider, Content } = Layout;
@@ -21,13 +23,18 @@ const Baselayout = () => {
     return (
         <Layout>
       <Sider trigger={null} collapsible collapsed={collapsed}>
-        <div className="logo" />
+        <div className="logo">
+          <h2 className='text-white fs-5 text-center py-3 mb-0'>
+            <span className='sm-logo'>VD</span>
+            <span className='lg-logo'>Vado dev</span>
+          </h2>
+        </div>
         <Menu
           theme="dark"
           mode="inline"
           defaultSelectedKeys={['']}
           onClick={({key})=>{
-              if(key == 'signout'){
+              if(key === 'signout'){
 
               } else {
                 navigate(key)
@@ -43,16 +50,62 @@ const Baselayout = () => {
               key: 'blogs',
               icon: <GiEvilBook />,
               label: 'Blogs',
+              children: [
+                {
+                  key: 'add-blogs',
+                  icon: <GiBookmark  />,
+                  label: 'Add Blogs',
+                },
+                {
+                  key: 'blog-list',
+                  icon: <GiBookPile />,
+                  label: 'Blog List',
+                },
+                {
+                  key: 'blog-categories',
+                  icon: <GiBookshelf />,
+                  label: 'Blog Categories',
+                },
+                {
+                  key: 'add-categories',
+                  icon: <GiSpellBook />,
+                  label: 'Add Blog Categories',
+                },
+              ]
             },
             {
-              key: 'subscribers',
-              icon: <BsPeople />,
-              label: 'Subscribers',
+              key: 'community',
+              icon: < RiCommunityLine />,
+              label: 'Community',
+              children: [
+                {
+                  key: 'subscribers',
+                  icon: <BsPeople />,
+                  label: 'Subscribers',
+                },
+                {
+                  key: 'members',
+                  icon: <RiUserSettingsFill/>,
+                  label: 'Members',
+                },
+              ]
             },
             {
               key: 'skills',
               icon: <GiCampfire />,
               label: 'Skills',
+              children: [
+                {
+                  key: 'skills-list',
+                  icon: <GiWildfires />,
+                  label: 'Skills List',
+                },
+                {
+                  key: 'add-skills',
+                  icon: <GiFireDash />,
+                  label: 'Add Skills',
+                },
+            ]
             },
             {
               key: 'messages',
@@ -64,6 +117,7 @@ const Baselayout = () => {
       </Sider>
       <Layout>
         <Header
+        className="d-flex justify-content-between ps-3 pe-5"
           style={{
             padding: 0,
             
@@ -80,6 +134,22 @@ const Baselayout = () => {
               color: 'white'
             }}
           />
+
+          <div className='d-flex gap-3 align-items-center'>
+            <div className='position-relative'> 
+              <IoIosNotificationsOutline className='text-white'/>
+              <span className='badge bg-warning rounded-circle p-1 position-absolute'>3</span>
+            </div>
+            <div className='d-flex gap-3 align-items-center'>
+              <div>
+                <img className='img' src="https://wallpapers.com/images/hd/cool-profile-picture-n8lf8k6jzs6ex36l.jpg" alt="" />
+              </div>
+              <div>
+                <h5 className='text-white mb-0'>Marvin</h5>
+                <p className='text-white mb-0'>marvin.wekesa@gmail.com</p>
+              </div>
+            </div>
+          </div>
         </Header>
         <Content
           style={{
@@ -89,7 +159,9 @@ const Baselayout = () => {
            
           }}
         >
-          Content
+          
+          <Outlet/>
+          
         </Content>
       </Layout>
     </Layout>
