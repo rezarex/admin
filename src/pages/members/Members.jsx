@@ -1,67 +1,42 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Table } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUsers } from '../../features/members/membersSlice';
 
 const columns = [
     {
       title: 'Full Name',
-      width: 100,
+      width: 80,
       dataIndex: 'name',
       key: 'name',
       fixed: 'left',
+      defaultSortOrder: "descend",
+      sorter: (a,b) => a.name.length - b.name.length,
     },
     {
-      title: 'Age',
-      width: 100,
-      dataIndex: 'age',
-      key: 'age',
+      title: 'Email',
+      width: 80,
+      dataIndex: 'email',
+      key: 'email',
       fixed: 'left',
     },
     {
-      title: 'Column 1',
-      dataIndex: 'address',
+      title: 'Mobile',
+      dataIndex: 'mobile',
       key: '1',
       width: 150,
     },
     {
-      title: 'Column 2',
-      dataIndex: 'address',
+      title: 'Role',
+      dataIndex: 'role',
       key: '2',
       width: 150,
     },
     {
-      title: 'Column 3',
-      dataIndex: 'address',
-      key: '3',
+      title: 'Member Since',
+      dataIndex: 'membersince',
+      key: '2',
       width: 150,
-    },
-    {
-      title: 'Column 4',
-      dataIndex: 'address',
-      key: '4',
-      width: 150,
-    },
-    {
-      title: 'Column 5',
-      dataIndex: 'address',
-      key: '5',
-      width: 150,
-    },
-    {
-      title: 'Column 6',
-      dataIndex: 'address',
-      key: '6',
-      width: 150,
-    },
-    {
-      title: 'Column 7',
-      dataIndex: 'address',
-      key: '7',
-      width: 150,
-    },
-    {
-      title: 'Column 8',
-      dataIndex: 'address',
-      key: '8',
     },
     {
       title: 'Action',
@@ -71,17 +46,27 @@ const columns = [
       render: () => <a>action</a>,
     },
   ];
-  const data = [];
-  for (let i = 0; i < 100; i++) {
-    data.push({
-      key: i,
-      name: `Edward ${i}`,
-      age: 32,
-      address: `London Park no. ${i}`,
-    });
-  }
+ 
 
 const Members = () => {
+  const dispatch = useDispatch();
+  useEffect(()=>{
+    dispatch(getUsers())
+  },[]);
+  const memberstate = useSelector((state)=>state.members.members)
+
+  const data = [];
+  for (let i = 0; i < memberstate.length; i++) {
+    data.push({
+      key: i + 1,
+      name: memberstate[i].username,
+      email: memberstate[i].email,
+      mobile: memberstate[i].mobile,
+      role: memberstate[i].role,
+      membersince: memberstate[i].createdAt,
+    });
+  } 
+
   return (
     <div>
       <Table

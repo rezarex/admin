@@ -101,9 +101,9 @@ const Baselayout = () => {
                   label: 'Skills List',
                 },
                 {
-                  key: 'add-skills',
+                  key: 'projects',
                   icon: <GiFireDash />,
-                  label: 'Add Skills',
+                  label: 'Projects',
                 },
             ]
             },

@@ -1,3 +1,9 @@
 .login{
     background: #ffd333;
 }
+
+.error{
+    color: red;
+    font-size: 12px;
+    
+}

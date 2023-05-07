@@ -12,6 +12,7 @@ import Skillslist from './pages/skilslist/Skillslist';
 import Subscribers from './pages/subscribers/Subscribers';
 import Members from './pages/members/Members';
 import Addblogs from './pages/addblog/Addblogs';
+import Projects from './pages/projects/Projects';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
       <Route path='/admin' element={ <Baselayout/> }>
         <Route index element={< Dashboard/>}/>
         <Route path='messages' element={< Messages/>}/>
+        <Route path='projects' element={< Projects/>}/>
         <Route path='add-blogs' element={< Addblogs/>}/>
         <Route path='blog-list' element={< Bloglist/>}/>
         <Route path='blog-categories' element={< Blogcategories/>}/>
