@@ -105,6 +105,16 @@ const Baselayout = () => {
                   icon: <GiFireDash />,
                   label: 'Projects',
                 },
+                {
+                  key: 'add-skills',
+                  icon: <GiWildfires />,
+                  label: 'Add Skills',
+                },
+                {
+                  key: 'add-projects',
+                  icon: <GiWildfires />,
+                  label: 'Add Projects',
+                },
             ]
             },
             {

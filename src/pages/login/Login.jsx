@@ -9,13 +9,13 @@ import { login } from '../../features/auth/authSlice';
 
 
 
+let schema = yup.object().shape({
+  email: yup.string().email("Email should be valid").required("Email is required"),
+  password: yup.string().required("Password is required"),
+});
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  let schema = yup.object().shape({
-    email: yup.string().email("Email should be valid").required("Email is required"),
-    password: yup.string().required("Password is required"),
-  });
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -24,18 +24,20 @@ const Login = () => {
     validationSchema: schema,
     onSubmit: (values) => {
       dispatch(login(values))
-      alert(JSON.stringify(values, null, 2));
+      //alert(JSON.stringify(values, null, 2));
     },
   });
 
-  const {user, isLoading, isError, isSuccess, message} = useSelector((state)=>state.auth)
+  const authState = useSelector((state)=>state)
+
+  const {user, isLoading, isError, isSuccess, message} = authState.auth;
   useEffect(()=>{
     if(isSuccess){
       navigate("admin")
     } else {
       navigate("")
     }
-  }, [user, isLoading, isError, isSuccess, message])
+  }, [user, isLoading, isError, isSuccess])
 
   return (
     <div className='py-5' style={{ background: "#ffd333", minHeight: "100vh" }}>

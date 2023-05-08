@@ -13,6 +13,10 @@ import Subscribers from './pages/subscribers/Subscribers';
 import Members from './pages/members/Members';
 import Addblogs from './pages/addblog/Addblogs';
 import Projects from './pages/projects/Projects';
+import AddCategory from './pages/addcategory/AddCategory';
+import Addprojects from './pages/addprojects/Addprojects';
+import Addskills from './pages/addskills/Addskills';
+
 
 function App() {
   return (
@@ -26,7 +30,10 @@ function App() {
         <Route path='messages' element={< Messages/>}/>
         <Route path='projects' element={< Projects/>}/>
         <Route path='add-blogs' element={< Addblogs/>}/>
+        <Route path='add-categories' element={< AddCategory/>}/>
+        <Route path='add-projects' element={< Addprojects/>}/>
         <Route path='blog-list' element={< Bloglist/>}/>
+        <Route path='add-skills' element={< Addskills/>}/>
         <Route path='blog-categories' element={< Blogcategories/>}/>
         <Route path='skills-list' element={< Skillslist/>}/>
         <Route path='subscribers' element={< Subscribers/>}/>

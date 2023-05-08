@@ -91,7 +91,7 @@ const Addblogs = () => {
 
   return (
     <div>
-        <h3 className="mb4">Add Blog</h3>
+        <h3 className="mb-4">Add Blog</h3>
      
      
         <Dragger {...props}>

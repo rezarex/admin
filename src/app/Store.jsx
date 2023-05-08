@@ -7,6 +7,7 @@ import subscriberReducer from '../features/subscribers/subscriberSlice'
 import categoryReducer from '../features/blogcat/blogcatSlice'
 import blogReducer from "../features/blog/blogSlice";
 import messagesReducer from "../features/messages/messagesSlice";
+import uploadReducer from "../features/upload/uploadSlice";
 
 export const store = configureStore({
     reducer: {
@@ -18,5 +19,6 @@ export const store = configureStore({
         category: categoryReducer,
         blogs: blogReducer,
         messages: messagesReducer,
+        upload: uploadReducer,
     },
 })
