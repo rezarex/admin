@@ -1,80 +1,103 @@
-import React from 'react'
-import { Space, Table, Tag } from 'antd';
+import React, { useContext, useEffect, useRef, useState } from 'react'
+import { Button, Form, Space, Popconfirm, Table } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import { getBlogs } from '../../features/blog/blogSlice';
 
 
 const columns = [
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+  {
+    title: 'No.',
+    dataIndex: 'num',
+    key: 'num',
+  },  
+  {
+      title: 'Title',
+      dataIndex: 'title',
+      key: 'title',
       render: (text) => <a>{text}</a>,
     },
     {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
+      title: 'Descritpion',
+      dataIndex: 'desc',
+      key: 'desc',
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
+      title: 'Body',
+      dataIndex: 'body',
+      key: 'body',
     },
     {
-      title: 'Tags',
-      key: 'tags',
-      dataIndex: 'tags',
-      render: (_, { tags }) => (
-        <>
-          {tags.map((tag) => {
-            let color = tag.length > 5 ? 'geekblue' : 'green';
-            if (tag === 'loser') {
-              color = 'volcano';
-            }
-            return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </>
-      ),
+      title: 'Date Created',
+      dataIndex: 'created',
+      key: 'created',
     },
+    // {
+    //   title: 'Tags',
+    //   key: 'tags',
+    //   dataIndex: 'tags',
+    //   render: (_, { tags }) => (
+    //     <>
+    //       {tags.map((tag) => {
+    //         let color = tag.length > 5 ? 'geekblue' : 'green';
+    //         if (tag === 'loser') {
+    //           color = 'volcano';
+    //         }
+    //         return (
+    //           <Tag color={color} key={tag}>
+    //             {tag.toUpperCase()}
+    //           </Tag>
+    //         );
+    //       })}
+    //     </>
+    //   ),
+    // },
     {
       title: 'Action',
       key: 'action',
       render: (_, record) => (
         <Space size="middle">
-          <a>Invite {record.name}</a>
+          <a>Edit {record.name}</a>
           <a>Delete</a>
         </Space>
       ),
     },
   ];
-  const data = [
-    {
-      key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      key: '2',
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      key: '3',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sydney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-  ];
+
+
+  // const data = [
+  //   {
+  //     key: '1',
+  //     name: 'John Brown',
+  //     age: 32,
+  //     address: 'New York No. 1 Lake Park',
+  //    // tags: ['nice', 'developer'],  -->add category function here
+  //   },
+  // ];
 
 const Bloglist = () => {
+  //const hasSelected = selectedRowKeys.length > 0; 
+
+  const dispatch = useDispatch();
+  useEffect(()=>{
+    dispatch(getBlogs())
+  },[]);
+
+const blogsState = useSelector((state)=>state.blogs.blogs)
+
+/**
+* title, totalratings, createdAt, images
+* 
+*/
+  const data = [];
+  for (let i = 0; i < blogsState.length; i++) {
+    data.push({
+      num: i + 1,
+      title: blogsState[i].title,
+      desc: blogsState[i].desc,
+      body: blogsState[i].body,
+      created: blogsState[i].createdAt,
+    });
+  }
   return (
     <div>
         <Table columns={columns} dataSource={data} />

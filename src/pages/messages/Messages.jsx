@@ -1,34 +1,62 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { Button, Table } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import { getMessages } from '../../features/messages/messagesSlice';
 
 const columns = [
-    {
-      title: 'Name',
-      dataIndex: 'name',
-    },
-    {
-      title: 'Age',
-      dataIndex: 'age',
-    },
-    {
-      title: 'Address',
-      dataIndex: 'address',
-    },
-  ];
-  const data = [];
-  for (let i = 0; i < 46; i++) {
-    data.push({
-      key: i,
-      name: `Edward King ${i}`,
-      age: 32,
-      address: `London, Park Lane no. ${i}`,
-    });
-  }
+  {
+    title: 'Name',
+    dataIndex: 'name',
+  },
+  {
+    title: 'Email',
+    dataIndex: 'email',
+  },
+  {
+    title: 'Message',
+    dataIndex: 'message',
+  },
+  {
+    title: 'Date',
+    dataIndex: 'date',
+  },
+];
+  // const data = [];
+  // for (let i = 0; i < 46; i++) {
+  //   data.push({
+  //     key: i,
+  //     name: `Edward King ${i}`,
+  //     age: 32,
+  //     address: `London, Park Lane no. ${i}`,
+  //   });
+  // }
 
 const Messages = () => {
 
+  const dispatch = useDispatch();
 
-    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  useEffect(()=>{
+    dispatch(getMessages())
+  },[]);
+
+const messageState = useSelector((state)=>state.messages.messages)
+
+/**
+* title, totalratings, createdAt, images
+* 
+*/
+  const data = [];
+  for (let i = 0; i < messageState.length; i++) {
+    data.push({
+      key: i + 1,
+      name: messageState[i].name,
+      email: messageState[i].email,
+      message: messageState[i].message,
+      date: messageState[i].createdAt,
+    });
+  }
+
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [loading, setLoading] = useState(false);
   const start = () => {
     setLoading(true);

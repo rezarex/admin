@@ -1,96 +1,104 @@
-import React,{ useEffect, useState } from 'react'
-import { Table } from 'antd';
-import qs from 'qs';
+import React, {useState, useEffect} from 'react'
+import { Button, Table } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import {getSubscribers} from '../../features/subscribers/subscriberSlice'
 
 const columns = [
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      sorter: true,
-      render: (name) => `${name.first} ${name.last}`,
-      width: '20%',
-    },
-    {
-      title: 'Gender',
-      dataIndex: 'gender',
-      filters: [
-        {
-          text: 'Male',
-          value: 'male',
-        },
-        {
-          text: 'Female',
-          value: 'female',
-        },
-      ],
-      width: '20%',
-    },
-    {
+  {
+    title: 'No.',
+    dataIndex: 'num',
+  },
+  {
       title: 'Email',
       dataIndex: 'email',
     },
-  ];
-  const getRandomuserParams = (params) => ({
-    results: params.pagination?.pageSize,
-    page: params.pagination?.current,
-    ...params,
-  });
-const Subscribers = () => {
-
-    const [data, setData] = useState();
-  const [loading, setLoading] = useState(false);
-  const [tableParams, setTableParams] = useState({
-    pagination: {
-      current: 1,
-      pageSize: 10,
+    {
+      title: 'Description',
+      dataIndex: 'description',
     },
-  });
-  const fetchData = () => {
+    {
+      title: 'URL',
+      dataIndex: 'url',
+    },
+    {
+      title: 'Likes',
+      dataIndex: 'likes',
+    },
+    {
+      title: 'Dislikes',
+      dataIndex: 'dislikes',
+    },
+  ];
+
+const Projects = () => {
+
+
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const start = () => {
     setLoading(true);
-    fetch(`https://randomuser.me/api?${qs.stringify(getRandomuserParams(tableParams))}`)
-      .then((res) => res.json())
-      .then(({ results }) => {
-        setData(results);
-        setLoading(false);
-        setTableParams({
-          ...tableParams,
-          pagination: {
-            ...tableParams.pagination,
-            total: 200,
-            // 200 is mock data, you should read it from server
-            // total: data.totalCount,
-          },
-        });
-      });
+    // ajax request after empty completing
+    setTimeout(() => {
+      setSelectedRowKeys([]);
+      setLoading(false);
+    }, 1000);
   };
-
-  useEffect(() => {
-    fetchData();
-  }, [JSON.stringify(tableParams)]);
-  const handleTableChange = (pagination, filters, sorter) => {
-    setTableParams({
-      pagination,
-      filters,
-      ...sorter,
-    });
-
-    // `dataSource` is useless since `pageSize` changed
-    if (pagination.pageSize !== tableParams.pagination?.pageSize) {
-      setData([]);
-    }
+  const onSelectChange = (newSelectedRowKeys) => {
+    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
+    setSelectedRowKeys(newSelectedRowKeys);
   };
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
+  const hasSelected = selectedRowKeys.length > 0;
+
+
+  const dispatch = useDispatch();
+  useEffect(()=>{
+    dispatch(getSubscribers())
+  },[]);
+
+const subscriberState = useSelector((state)=>state.subscribers.subscribers)
+
+/**
+ * title, desc, projecturl,body,photo,likes,dislikes
+ */
+
+const data = [];
+for (let i = 0; i < subscriberState.length; i++) {
+  data.push({
+    num: i + 1,
+    email: subscriberState[i].email,
+    // description: projectState[i].desc,
+    // url: projectState[i].projecturl,
+    // likes: projectState[i].likes,
+    // dislikes: projectState[i].dislikes,
+  });
+}
+
   return (
     <div>
-        <Table
-      columns={columns}
-      rowKey={(record) => record.login.uuid}
-      dataSource={data}
-      pagination={tableParams.pagination}
-      loading={loading}
-      onChange={handleTableChange}
-    />
+        <h3 className="mb-4">Subscribers</h3>
+        <div
+        style={{
+          marginBottom: 16,
+        }}
+      >
+        <Button type="primary" onClick={start} disabled={!hasSelected} loading={loading}>
+          Reload
+        </Button>
+        <span
+          style={{
+            marginLeft: 8,
+          }}
+        >
+          {hasSelected ? `Selected ${selectedRowKeys.length} items` : ''}
+        </span>
+      </div>
+      <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
     </div>
   )
 }
 
-export default Subscribers
+export default Projects
