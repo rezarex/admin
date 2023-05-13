@@ -5,6 +5,8 @@ import {
     // UserOutlined,
     // VideoCameraOutlined,
   } from '@ant-design/icons';
+  import { ToastContainer, toast } from 'react-toastify';
+  import 'react-toastify/dist/ReactToastify.css';
  import { Button, Layout, Menu, theme } from 'antd';
  import { useNavigate, Outlet, Link } from 'react-router-dom';
  import { useState } from 'react';
@@ -173,7 +175,18 @@ const Baselayout = () => {
            
           }}
         >
-          
+          <ToastContainer
+          position="top-center"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          // pauseOnHover
+          theme="light"
+          />
           <Outlet/>
           
         </Content>

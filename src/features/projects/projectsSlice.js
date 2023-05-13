@@ -9,6 +9,14 @@ export const getProjects = createAsyncThunk('projects/get-projects', async(thunk
     }
 })
 
+export const createProjects = createAsyncThunk('projects/create-projects', async(projectData, thunkAPI)=>{
+    try {
+        return await projectsService.createProjects(projectData);
+    } catch (error) {
+        return thunkAPI.rejectWithValue(error);
+    }
+})
+
 const initialState = {
     projects: [],
     isError: false,
@@ -30,6 +38,18 @@ export const projectsSlice = createSlice({
             state.isSuccess = true;
             state.projects = action.payload;
         }).addCase(getProjects.rejected, (state, action)=>{
+            state.isLoading = false;
+            state.isError = true;
+            state.isSuccess = false;
+            state.message = action.error;
+        }).addCase(createProjects.pending, (state)=>{
+            state.isLoading = true;
+        }).addCase(createProjects.fulfilled, (state, action)=>{
+            state.isLoading = false;
+            state.isError = false;
+            state.isSuccess = true;
+            state.createdProjects = action.payload;
+        }).addCase(createProjects.rejected, (state, action)=>{
             state.isLoading = false;
             state.isError = true;
             state.isSuccess = false;

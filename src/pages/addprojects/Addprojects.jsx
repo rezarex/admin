@@ -3,36 +3,53 @@ import CustomInput from '../../components/custominput/CustomInput'
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
-import Dropzone from 'react-dropzone'
-import { uploadImg } from '../../features/upload/uploadSlice';
+// import Dropzone from 'react-dropzone'
+// import { uploadImg } from '../../features/upload/uploadSlice';
+import { createProjects } from '../../features/projects/projectsSlice';
+import { useNavigate } from 'react-router-dom';
+import {  toast } from 'react-toastify';
+
 
 let schema = yup.object().shape({
   title: yup.string().required("Title is required"),
   desc: yup.string().required("Description is required"),
-  url: yup.string().required("URL is required"),
+  projecturl: yup.string().required("URL is required"),
   body: yup.string().required("Body is required"),
 });
 
 const Addprojects = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // useEffect(()=>{
 
   // })
 
-  // const imgState = useSelector((state)=> state.upload.images)
+  const newProject = useSelector((state)=> state.projects)
+  const {isSuccess, isError, isLoading, createdProjects} = newProject;
+  useEffect(()=>{
+    if(isSuccess && createdProjects){
+      toast.success('🦄 Project Created Successfully!', {});
+    }
+    if(isError){
+      toast.error('🚑 Something went wrong!', {});
+    }
+  }, [isSuccess, isError, isLoading])
 
   const formik = useFormik({
     initialValues: {
      title: '',
      desc: '',
-     url: '',
+     projecturl: '',
      body: '',
     },
     validationSchema: schema,
     onSubmit: (values) => {
-      //dispatch(login(values))
-      alert(JSON.stringify(values));
+      dispatch(createProjects(values))
+      formik.resetForm();
+      setTimeout(()=>{
+        navigate('/admin/projects')
+      }, 3000)
     },
   });
   return (
@@ -52,16 +69,16 @@ const Addprojects = () => {
                       formik.touched.desc && formik.errors.desc
                     }
                 </div>
-                <CustomInput type='text' onCh={formik.handleChange('body')} onBlr={formik.handleBlur('body')} label="Enter Project URL" />
+                <CustomInput type='text' onCh={formik.handleChange('body')} onBlr={formik.handleBlur('body')} label="Enter Project projecturl" />
                 <div className="error">
                     {
                       formik.touched.body && formik.errors.body
                     }
                 </div>
-                <CustomInput type='text' onCh={formik.handleChange('url')} onBlr={formik.handleBlur('url')} label="Type Project Body"/>
+                <CustomInput type='text' onCh={formik.handleChange('projecturl')} onBlr={formik.handleBlur('projecturl')} label="Type Project Body"/>
                 <div className="error">
                     {
-                      formik.touched.url && formik.errors.url
+                      formik.touched.projecturl && formik.errors.projecturl
                     }
                 </div>
                 

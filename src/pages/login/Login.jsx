@@ -6,7 +6,7 @@ import CustomInput from '../../components/custominput/CustomInput'
 import {Link, useNavigate} from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../features/auth/authSlice';
-
+import {  toast } from 'react-toastify';
 
 
 let schema = yup.object().shape({
@@ -33,8 +33,12 @@ const Login = () => {
   const {user, isLoading, isError, isSuccess, message} = authState.auth;
   useEffect(()=>{
     if(isSuccess){
+      //alert("successfully logged in!");
+      toast.success('🦄 Login Successful!', {});
+
       navigate("admin")
     } else {
+      toast.error('🚑 Something went wrong!', {});
       navigate("")
     }
   }, [user, isLoading, isError, isSuccess])
@@ -50,7 +54,7 @@ const Login = () => {
        <p className='text-center'>Admin Login Page</p>
 
       <div className="error text-center">
-        {message.message == "Rejected" ? "You are not an admin" : ""}
+        {message.message === "Rejected" ? "You are not an admin" : ""}
       </div>
 
        <form action="" onSubmit={formik.handleSubmit}>
