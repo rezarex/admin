@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import {  toast } from 'react-toastify';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import {createSkill} from '../../features/skills/skillsSlice'
+import {createSkill, resetState} from '../../features/skills/skillsSlice'
 let schema = yup.object().shape({
   title: yup.string().required("Skill is required"),
 });
@@ -39,6 +39,7 @@ const Addskills = () => {
       dispatch(createSkill(values))
       formik.resetForm();
       setTimeout(()=>{
+        dispatch(resetState())
         navigate('/admin/skills-list')
       }, 3000)
     },

@@ -2,6 +2,9 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Button, Form, Space, Popconfirm, Table } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { getBlogs } from '../../features/blog/blogSlice';
+import { Link } from 'react-router-dom';
+import {BiEdit} from 'react-icons/bi'
+import {AiFillDelete} from 'react-icons/ai'
 
 
 const columns = [
@@ -54,12 +57,7 @@ const columns = [
     {
       title: 'Action',
       key: 'action',
-      render: (_, record) => (
-        <Space size="middle">
-          <a>Edit {record.name}</a>
-          <a>Delete</a>
-        </Space>
-      ),
+      dataIndex: 'action'
     },
   ];
 
@@ -96,6 +94,20 @@ const blogsState = useSelector((state)=>state.blogs.blogs)
       desc: blogsState[i].desc,
       body: blogsState[i].body,
       created: blogsState[i].createdAt,
+      action: (
+       <>
+       
+        <Space size="middle">
+          <Link to={`/admin/add-blogs/${blogsState[i]._id}`} className='fs-3 text-danger'>
+            <BiEdit/>
+          </Link>
+          <Link to="" className='fs-3 text-danger'>
+            <AiFillDelete/>
+          </Link>
+        </Space>
+      
+       </> 
+      ),
     });
   }
   return (

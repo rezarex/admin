@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import membersService from "./membersService";
 
 export const getUsers = createAsyncThunk('members/get-members', async(thunkAPI)=>{
@@ -8,6 +8,9 @@ export const getUsers = createAsyncThunk('members/get-members', async(thunkAPI)=
         return thunkAPI.rejectWithValue(error);
     }
 })
+
+export const resetState = createAction("Reset_all");
+
 
 const initialState = {
     members: [],
@@ -34,7 +37,7 @@ export const membersSlice = createSlice({
             state.isError = true;
             state.isSuccess = false;
             state.message = action.error;
-        })     
+        }).addCase(resetState, ()=>initialState);    
         
     }
 })

@@ -30,6 +30,7 @@ function App() {
         <Route path='messages' element={< Messages/>}/>
         <Route path='projects' element={< Projects/>}/>
         <Route path='add-blogs' element={< Addblogs/>}/>
+        <Route path='add-blogs/:id' element={< Addblogs/>}/>
         <Route path='add-categories' element={< AddCategory/>}/>
         <Route path='add-projects' element={< Addprojects/>}/>
         <Route path='blog-list' element={< Bloglist/>}/>

@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import categoryService from './blogcatService'
 
 export const getCategory = createAsyncThunk('category/get-category', async(thunkAPI)=>{
@@ -16,6 +16,8 @@ export const createCategory = createAsyncThunk('category/create-category', async
         return thunkAPI.rejectWithValue(error);
     }
 })
+
+export const resetState = createAction("Reset_all");
 
 const initialState = {
     category: [],
@@ -54,7 +56,7 @@ export const categorySlice = createSlice({
             state.isError = true;
             state.isSuccess = false;
             state.message = action.error;
-        })     
+        }).addCase(resetState, ()=>initialState);     
         
     }
 })

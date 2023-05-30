@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import messagesService from "./messagesService";
 
 export const getMessages = createAsyncThunk('messages/get-messages', async(thunkAPI)=>{
@@ -8,6 +8,8 @@ export const getMessages = createAsyncThunk('messages/get-messages', async(thunk
         return thunkAPI.rejectWithValue(error);
     }
 })
+
+export const resetState = createAction("Reset_all");
 
 const initialState = {
     messages: [],
@@ -34,7 +36,7 @@ export const messagesSlice = createSlice({
             state.isError = true;
             state.isSuccess = false;
             state.message = action.error;
-        })     
+        }).addCase(resetState, ()=>initialState);    
         
     }
 })

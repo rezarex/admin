@@ -5,7 +5,7 @@ import * as yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 // import Dropzone from 'react-dropzone'
 // import { uploadImg } from '../../features/upload/uploadSlice';
-import { createProjects } from '../../features/projects/projectsSlice';
+import { createProjects, resetState } from '../../features/projects/projectsSlice';
 import { useNavigate } from 'react-router-dom';
 import {  toast } from 'react-toastify';
 
@@ -48,6 +48,7 @@ const Addprojects = () => {
       dispatch(createProjects(values))
       formik.resetForm();
       setTimeout(()=>{
+        dispatch(resetState())
         navigate('/admin/projects')
       }, 3000)
     },

@@ -5,7 +5,7 @@ import './login.css'
 import CustomInput from '../../components/custominput/CustomInput'
 import {Link, useNavigate} from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../../features/auth/authSlice';
+import { login, resetState } from '../../features/auth/authSlice';
 import {  toast } from 'react-toastify';
 
 
@@ -24,6 +24,10 @@ const Login = () => {
     validationSchema: schema,
     onSubmit: (values) => {
       dispatch(login(values))
+      setTimeout(()=>{
+        dispatch(resetState())
+        //navigate('/admin')
+      }, 300)
       //alert(JSON.stringify(values, null, 2));
     },
   });
@@ -32,10 +36,11 @@ const Login = () => {
 
   const {user, isLoading, isError, isSuccess, message} = authState.auth;
   useEffect(()=>{
-    if(isSuccess){
+    if(isLoading){
+      toast.success('🦄 Loging in..', {});
+    }else if(isSuccess){
       //alert("successfully logged in!");
       toast.success('🦄 Login Successful!', {});
-
       navigate("admin")
     } else {
       toast.error('🚑 Something went wrong!', {});

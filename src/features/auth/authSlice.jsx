@@ -1,5 +1,5 @@
 
-import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
+import {createSlice, createAsyncThunk, createAction} from '@reduxjs/toolkit'
 import authService from './authService';
 /**
  * TODO: get user from local storage instead of commented code below which create's 
@@ -34,6 +34,8 @@ export const login = createAsyncThunk('auth/login/admin', async(user, thunkAPI)=
     }
 })
 
+export const resetState = createAction("Reset_all");
+
 export const authSlice = createSlice({
     name: "auth",
     initialState,
@@ -55,7 +57,7 @@ export const authSlice = createSlice({
             state.isSuccess = false;
             state.message = action.error;
             state.isLoading = false;
-        });
+        }).addCase(resetState, ()=>initialState);
     }
 });
 

@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import projectsService from "./projectsService";
 
 export const getProjects = createAsyncThunk('projects/get-projects', async(thunkAPI)=>{
@@ -16,6 +16,8 @@ export const createProjects = createAsyncThunk('projects/create-projects', async
         return thunkAPI.rejectWithValue(error);
     }
 })
+
+export const resetState = createAction("Reset_all");
 
 const initialState = {
     projects: [],
@@ -54,7 +56,7 @@ export const projectsSlice = createSlice({
             state.isError = true;
             state.isSuccess = false;
             state.message = action.error;
-        })     
+        }).addCase(resetState, ()=>initialState);
         
     }
 })

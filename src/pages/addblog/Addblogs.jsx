@@ -6,13 +6,20 @@ import hljs from "highlight.js";
 import "react-quill/dist/quill.core.css";
 import "react-quill/dist/quill.snow.css";
 import "highlight.js/styles/atom-one-dark.css";
-import { InboxOutlined } from '@ant-design/icons';
-import { message, Upload } from 'antd';
+import { useFormik } from 'formik';
+import * as yup from 'yup';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useLocation } from 'react-router-dom';
+import {  toast } from 'react-toastify';
+import { getCategory } from '../../features/blogcat/blogcatSlice';
+import { getBlogs, createBlog, resetState, getABlog } from '../../features/blog/blogSlice';
 // import { Stepper } from 'react-form-stepper';
 // import ReactQuill from "react-quill";
 // import ReactMarkdown from "react-markdown";
 // import rehypeRaw from "rehype-raw";
 import './addblog.css'
+// import Dropzone from 'react-dropzone'
+// import { uploadImg } from '../../features/upload/uploadSlice';
 
 
 hljs.configure({
@@ -59,75 +66,188 @@ hljs.configure({
   ];
   const placeholder = "Description";
 
-  const { Dragger } = Upload;
-const props = {
-  name: 'file',
-  multiple: true,
-  action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-  onChange(info) {
-    const { status } = info.file;
-    if (status !== 'uploading') {
-      console.log(info.file, info.fileList);
-    }
-    if (status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully.`);
-    } else if (status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-  onDrop(e) {
-    console.log('Dropped files', e.dataTransfer.files);
-  },
-};
+  let schema = yup.object().shape({
+    title: yup.string().required("Title is required"),
+    desc: yup.string().required("Description is required"),
+    //photo: yup.string().required("Photo is required"),
+    body: yup.string().required("Body is required"),
+    category: yup.string().required("Category is required"),
+  });
+
 
 const Addblogs = () => {
 
     const [value, setValue] = useState('');
+    const location = useLocation()
+    const getBlogId = location.pathname.split("/")[3]
+    //console.log(getBlogId);
+
+    const newBlog = useSelector((state) => state.blogs);
+    const blogCat = useSelector((state)=>state.category.category);
+    const { isSuccess, isError, isLoading, createdBlog, blogTitle } = newBlog;
+    
+    useEffect(() => {
+      if(getBlogId !== undefined){
+        dispatch(getABlog(getBlogId));
+        formik.values.title=blogTitle;
+      }else{
+        dispatch(resetState())
+      }
+    }, [getBlogId]);
     
     // const [markdownText, setMarkdownText] = useState("");
-    // useEffect(() => {
-    //   console.log({ markdownText });
-    // }, [markdownText]);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  //const [images, setImages] = useState([]);
+  useEffect(() => {
+    dispatch(getCategory());
+  }, []);
+
+  //const imgState = useSelector((state) => state.upload.images);
+ 
+  useEffect(() => {
+    if (isSuccess && createdBlog) {
+      toast.success("Blog Added Successfullly!");
+    }
+    if (isError) {
+      toast.error("Something Went Wrong!");
+    }
+  }, [isSuccess, isError, isLoading]);
+
+  // const img = [];
+  // imgState.forEach((i) => {
+  //   img.push({
+  //     public_id: i.public_id,
+  //     url: i.url,
+  //   });
+  // });
+
+  // useEffect(() => {
+  //   formik.values.images = img;
+  // }, [color, img]);
+  const formik = useFormik({
+    initialValues: {
+      title: "",
+      desc: "",
+      body: "",
+      category: "",
+     // images: "",
+    },
+    validationSchema: schema,
+    onSubmit: (values) => {
+      //alert(JSON.stringify(values))
+      dispatch(createBlog(values));
+      formik.resetForm();
+      setTimeout(() => {
+       dispatch(resetState());
+       navigate("/admin/blog-list")
+      }, 3000);
+    },
+  });
 
   return (
     <div>
-        <h3 className="mb-4">Add Blog</h3>
+        <h3 className="mb-4">{getBlogId !== undefined ? "Edit" : "Add"} Blog</h3>
      
-     
-        <Dragger {...props}>
-    <p className="ant-upload-drag-icon">
-      <InboxOutlined />
-    </p>
-    <p className="ant-upload-text">Click or drag file to this area to upload</p>
-    <p className="ant-upload-hint">
-      Support for a single or bulk upload. Strictly prohibited from uploading company data or other
-      banned files.
-    </p>
-  </Dragger>
-
-    <div className="mt-3">
-        <CustomInput type="text" label="Enter Blog Title" />
-</div>
-        <select name="" id=""className='form-control py-3 mb-3' >
+     <form action="" onSubmit={formik.handleSubmit} className='d-flex gap-3 flex-column'>
+        <CustomInput type="text" label="Enter Blog Title" onCh={formik.handleChange('title')} onBlr={formik.handleBlur('title')} />
+        <div className="error">
+                    {
+                      formik.touched.title && formik.errors.title
+                    }
+                </div>
+        <CustomInput type="text" label="Enter Blog Description" onCh={formik.handleChange('desc')} onBlr={formik.handleBlur('desc')}/>
+        <div className="error">
+                    {
+                      formik.touched.desc && formik.errors.desc
+                    }
+                </div>
+        <select name="" onChange={formik.handleChange("category")} onBlur={formik.handleBlur("category")} id=""className='form-control py-3' >
             <option value="">Select Blog Category</option>
+            {blogCat.map((i,j)=>{
+              return (
+                <option key={j} value={i.title}>
+                  {i.title}
+                </option>
+              )
+            })}
 
         </select>
-        
+        <div className="error">
+                    {
+                      formik.touched.category && formik.errors.category
+                    }
+                </div>
 
         <ReactQuill
-            value={value}
-            onChange={setValue}
+            value={formik.values.body}
+            onChange={formik.handleChange("body")}
             theme="snow"
             modules={modules}
             formats={formats}
             placeholder={placeholder}
+            name="body"
           />
+          
+           <div className="error">
+                    {
+                      formik.touched.body && formik.errors.body
+                    }
+                </div>
+
+<button type='submit' className='btn btn-success border-0 rounded-3 my-5'>Add Blog</button>
+     </form>
+     
+
+      <div className="mt-3 mb-3">
+          
+      </div>
+
+      <div className="mt-3 mb-3">
+              
+      </div>
+        
+        
+
+      
           {/* <div className="ql-snow">
             <div className="ql-editor">
               <ReactMarkdown children={value} rehypePlugins={[rehypeRaw]} />
             </div>
           </div> */}
-          <button type='submit' className='btn btn-success border-0 rounded-3 my-5'>Add Blog</button>
+          {/* 
+              add upload later
+              *********************
+              *********************
+              <div className="mt-3 bg-white border-1 p-5 text-center">
+                      <Dropzone onDrop={acceptedFiles => dispatch(uploadImg(acceptedFiles))}>
+                      {({getRootProps, getInputProps}) => (
+                        <section>
+                          <div {...getRootProps()}>
+                            <input {...getInputProps()} />
+                            <p>Drag 'n' drop some files here, or click to select files</p>
+                          </div>
+                        </section>
+                      )}
+                    </Dropzone>
+            
+              </div> */}
+              {/* <div className="showimages d-flex flex-wrap gap-3">
+                {
+                  imgState.map((i, j)=>{
+                    return (
+                      <div className="position-relative" key={j}>
+                      <button
+                      className="btn-close position-absolute"
+                      style={{top: "10px", right: "10px"}}
+                      ></button>
+                      <img src="" alt=""  width={200} height={200}/>
+                    </div>
+                    )
+                  })
+                }
+              </div> */}
+          
           <section className=""></section>
     </div>
   )
